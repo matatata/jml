@@ -1,5 +1,8 @@
 grammar FL;
 
+// antlr 3.4 tree-grammar for a SML like language.
+// author: Matteo Ceruti
+
 
 options {
     output=AST;
@@ -194,23 +197,6 @@ fn 	:	FN formals EQARROW exp
 		
 		
 ;
-
-
-/*
-fun	:	
- FUN id=ID  funpart 
- 	((PIPE)=>PIPE ID  funpart)* 
-  -> ^(REC $id ^(FN funpart+) )
-;
-
-funpart	:	
- f=formalprim
- 	(p=funpart ->  ^(EQARROW $f ^(FN $p) ) 
- 	|
- 	EQ exp ->    ^(EQARROW $f exp) 
- 	)
-;
-*/
 
 
 

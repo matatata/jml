@@ -2,31 +2,19 @@
 
 //val _ = print "Installing global definitions"
 
-val _compose = fn (f,g) => fn(x) => f (g x)
 
 val rest = fn h::r => r
 val first = fn h::r => h
 
-
-  
-val foldl = fn (f, a, []) => a
-| (f, a, (h::t)) => foldl (f, (f (h, a)), t)
-
-
-val foldr = fn (f,a,[]) => a
-  | (f,a,(h::t)) => f(h, (foldr (f,a,t)))
+/* This is the function for the "o" - operator
+*/
+val _compose = fn (f,g) => fn(x) => f (g x)
 
 
-val rec append = fn
-		(list,x) => 
-		case list of
-		nil => x::nil
-		|
-		h::t => h::(append(t,x))
-
-
-// do not delete!
-// This transforms the non curried function AST coming from the Parser into the right form
+/* This transforms the non curried function AST coming from the parser into the right form
+ e.g. fun add x y = x+y will be parsed as fn (x,y) => x+y. This function
+ transforms it to fn x=>y=>x+y
+*/
 val _fun = fn function =>
 let
 	val (FN ((args,_)::_)) = function
@@ -43,6 +31,25 @@ let
 in
 	f(formalsToList(args),[],0)
 end
+
+
+  
+val foldl = fn (f, a, []) => a
+| (f, a, (h::t)) => foldl (f, (f (h, a)), t)
+
+
+val foldr = fn (f,a,[]) => a
+  | (f,a,(h::t)) => f(h, (foldr (f,a,t)))
+
+
+val rec append = fn
+		(list,x) => 
+		case list of
+			nil => x::nil
+			|
+			h::t => h::(append(t,x))
+
+
 
 
 
