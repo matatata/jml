@@ -74,7 +74,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>fl.frontend.Main</mainClass>
+							<mainClass>fl.frontend.JML</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>

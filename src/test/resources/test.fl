@@ -1,3 +1,6 @@
+//val _ = print "Executing regression tests"
+
+
 // Literals:
 val anInt = 100
 val aDouble = 3.14

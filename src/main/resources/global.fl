@@ -1,4 +1,6 @@
-// various global definitions.
+// various global definitions. TODO add some structure
+
+//val _ = print "Installing global definitions"
 
 val _compose = fn (f,g) => fn(x) => f (g x)
 
@@ -9,8 +11,6 @@ val first = fn h::r => h
   
 val foldl = fn (f, a, []) => a
 | (f, a, (h::t)) => foldl (f, (f (h, a)), t)
-
-
 
 
 val foldr = fn (f,a,[]) => a
@@ -24,7 +24,6 @@ val rec append = fn
 		|
 		h::t => h::(append(t,x))
 
-type real = Double
 
 // do not delete!
 // This transforms the non curried function AST coming from the Parser into the right form
@@ -62,5 +61,5 @@ in
 end
 
 
-
+fun exit()= (class java.lang.System).exit 0
 

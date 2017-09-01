@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Reader;
-import java.util.Arrays;
 
 import fl.core.ToString;
 import fl.eval.Env;
@@ -24,7 +23,6 @@ public class Repl {
 
 	public static void repl(Env env) throws IOException {
 		System.out.println("Welcome!");
-//		System.out.println("Newline is " + Arrays.toString(newLine.getBytes()));
 		System.out.println("");
 		
 		while (true) {

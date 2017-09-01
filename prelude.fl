@@ -1,6 +1,0 @@
-
-
-val _ = import "test.fl"
-
-
-val sysprop= fn x:String => (class System).getProperty(x)
