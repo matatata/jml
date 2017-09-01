@@ -1,0 +1,155 @@
+// Literals:
+val anInt = 100
+val aDouble = 3.14
+val aString = "Hello World!"
+val literals=(nil,123,123.1234,"Hello World!",true,false, class java.util.ArrayList)
+
+// Lists
+begin
+	assert(rest[1,2,3]=[2,3]);
+	assert(first[1,2,3]=1)
+end
+
+
+// case pattern matching
+val _ = let val v = case (1,2) of
+	0 => "null"
+	|
+	(x,y) => x+y
+	|
+	x=>"irgend"
+in
+	assert(v=3)
+end
+
+val _ = let val f = fn x => x+1
+	val g = fn x => x*2
+	in
+		assert(((f o g) 2) = 5)
+	end 
+
+val _ = let
+	val (1::x::nil) = [1,2]
+in
+	assert (x=2)
+end
+
+
+val _ = let
+	val compose = fn (f,g) => fn(x) => f (g x) 
+	val f = fn x => x + 1
+	val g = fn x => x*2
+	val f_after_g = 5
+	val g_after_f = 6
+in
+	assert( ((f o g) 2 ) = f_after_g );
+	assert( ((g o f) 2 ) = g_after_f );
+	assert( (compose(f,g) 2 ) = f_after_g );
+	assert( (compose(g,f) 2 ) = g_after_f )
+end 
+
+
+val _ = let
+	datatype bar = FOO
+				| bee of Integer*String
+				| cee of Integer*String
+	val fff = fn FOO=>0
+			| cee(x,y) => y
+			| bee(x,y)=>x
+			
+in
+	assert (fff FOO = 0) ;
+	assert (fff (cee(1,"2")) = "2") ;
+	assert (fff (bee(1,"2")) = 1)
+end
+
+
+val _ = let
+	val rec factorial = fn 0 => 1
+		| n=> n * factorial (n-1)
+in	
+	assert ( (factorial 0)=1 ) ;
+	assert ( (factorial 1)=1 ) ;
+	assert ( (factorial 10)=3628800 ) 
+end
+
+
+// folds:
+val _ = assert(
+	foldl(cons,nil,[1,2,3])
+	= [3,2,1])
+
+val _ = assert(
+	foldl(fn (a,b) => string [a,b],"",[1,2,3,4])
+	= "4321") 
+
+// various	
+		
+val _ = assert ( #1 (1,2) = 1)
+
+val _ = assert((begin 2;1 end) = 1)
+
+
+val _ = let
+	val eval = fn (NUM x) => x 
+				| (IF(b,t,e)) => if eval(b) then eval(t) else eval(e)
+				| (BOOL b) => b
+				| (_) => "?"
+in 
+	assert(eval((IF (BOOL false, NUM 1, NUM 2)))=2);
+	assert(eval(read("if true then 1 else 2"))=1);
+	assert(eval(read("lalal"))="?")
+end
+
+
+
+// java:
+val _ = let
+	val System = class java.lang.System
+	val ArrayList = class java.util.ArrayList
+	val arrayList=ArrayList.new()
+in
+	arrayList.add(1);
+	assert(1=arrayList.get(0))
+end
+
+
+
+// fun keyword:
+
+val _ = let 
+ fun foo 1 y = 1 + y  
+ 	| foo x y = x
+in
+	assert (101=(foo 1 100));
+	assert (2 = (foo 2 123))
+end
+
+val _ = let 
+ fun add x y = x + y  
+ fun mul x y = x * y
+ val succ = add 1
+ val times2 = mul 2
+in
+	assert (101=(succ 100));
+	assert (6 = (times2 3))
+end
+
+
+val _ = let
+	fun sumList s = case s of [] => 0 | h::t => h + (sumList t)
+	val list = [1,2,3,4,5]
+in
+ 	assert(15=sumList list);
+ 	assert(16=foldl (addi, 1, list))
+end
+
+
+
+
+
+
+
+
+	
+

@@ -1,0 +1,66 @@
+// various global definitions.
+
+val _compose = fn (f,g) => fn(x) => f (g x)
+
+val rest = fn h::r => r
+val first = fn h::r => h
+
+
+  
+val foldl = fn (f, a, []) => a
+| (f, a, (h::t)) => foldl (f, (f (h, a)), t)
+
+
+
+
+val foldr = fn (f,a,[]) => a
+  | (f,a,(h::t)) => f(h, (foldr (f,a,t)))
+
+
+val rec append = fn
+		(list,x) => 
+		case list of
+		nil => x::nil
+		|
+		h::t => h::(append(t,x))
+
+type real = Double
+
+// do not delete!
+// This transforms the non curried function AST coming from the Parser into the right form
+val _fun = fn function =>
+let
+	val (FN ((args,_)::_)) = function
+	
+	val rec f = 
+		fn ([],formals,c) => APP (function,listToformals(formals))
+		|
+		(h::t,formals,c) =>
+			let 
+				val formal =  SYMBOL (string ["f",c])
+			in
+				FN [ ( formal ,f(t, append(formals,formal),c+1)) ]
+			end
+in
+	f(formalsToList(args),[],0)
+end
+
+
+
+
+// transform an object to a string. List-elements will be concatenated
+val string = fn x => let
+	val rec f = fn (sb,s) =>
+		case s of
+		nil => sb.toString()
+		|
+		h::t => begin sb.append(h); f(sb,t) end
+		|
+		_ => s.toString()
+in		 
+	f ((class StringBuilder).new(),x)
+end
+
+
+
+
