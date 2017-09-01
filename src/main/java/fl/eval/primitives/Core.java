@@ -142,7 +142,7 @@ public class Core implements PrimitiveProvider{
 		final Object tree;
 		try {
 			if (Unit.UNIT.equals(stringOrUnit))
-				tree = Tree2Ast.getParser(Repl.userRead(System.in,System.out)).repl()
+				tree = Tree2Ast.getParser(new Repl().userRead(System.in,System.out)).repl()
 						.getTree();
 			else
 				tree = Tree2Ast.getParser(ToString.asString(stringOrUnit)).mainexpEOF()

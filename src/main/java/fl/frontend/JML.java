@@ -52,7 +52,7 @@ public class JML {
 			executeFile(env, args[i]);
 		}
 		
-		Repl.repl(env);
+		new Repl().repl(env);
 	}
 
 

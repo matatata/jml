@@ -11,30 +11,38 @@ import fl.core.ToString;
 import fl.eval.Env;
 import fl.eval.Evaluator;
 import fl.frontend.parser.Tree2Ast;
-import fl.types.Environment;
-import fl.types.S_T;
-import fl.types.TypeInferrer;
+import jline.TerminalFactory;
+import jline.console.ConsoleReader;
 
+/**
+ * Read-Eval-Print Loop
+ */
 public class Repl {
 
 	private static String newLine=System.getProperty("line.separator");
-	public Repl() {
-	}
 
-	public static void repl(Env env) throws IOException {
-		System.out.println("Welcome!");
+
+	public void repl(Env env) throws IOException {
+		
+		installShutdownHook();
+		
+		System.out.println("Welcome to JML!\n\n\";\" separates expressions, whereas \";;\" indicates the end of the input\n" + 
+				"and triggers it's evaluation");
 		System.out.println("");
+
+		ConsoleReader console = new ConsoleReader();
+		console.setPrompt(">");
+		
 		
 		while (true) {
 			try {
-				System.out.print("- ");
-				Object tree = Tree2Ast
-						.getParser(readInput(new InputStreamReader(System.in),System.out))
-						.repl().getTree();
-//				System.out.println(((CommonTree) tree).toStringTree());
-				Object prog = Tree2Ast.getAst(tree);
+				String input = 
+						readJLineInput(console,System.out);
 				
-//				typeInferrTest(prog);
+				Object tree = Tree2Ast
+						.getParser(input)
+						.repl().getTree();
+				Object prog = Tree2Ast.getAst(tree);
 				
 				Object val = new Evaluator().visit(prog, env);
 				env.define("it", val);
@@ -42,30 +50,43 @@ public class Repl {
 				System.out.println("val it = " + ToString.stringify(val));
 				
 			} catch (Throwable e) {
-				e.printStackTrace();
+				System.err.println(e.getMessage());
 			}
 		}
+		
 	}
 
-	private static void typeInferrTest(Object val) {
+	private void installShutdownHook() {
+		Runtime.getRuntime().addShutdownHook(new Thread()
+	     {
+	         @Override
+	         public void run()
+	         {
+	             cleanup();
+	         }
+	     });
+	}
+
+
+
+	public void cleanup() {
 		try {
-			S_T te = new TypeInferrer().visit(val, Environment.EMPTY);
-			if (te != null)
-				System.out.println(te);
-		} catch (Throwable e) {
-//			 System.out.println(e.getMessage());
-			e.printStackTrace(System.out);
+		    TerminalFactory.get().restore();
+		} catch(Exception e) {
+			System.err.println(e.getMessage());
 		}
 	}
 
-	public static String userRead(InputStream in,PrintStream console) throws IOException {
+
+	public String userRead(InputStream in,PrintStream console) throws IOException {
 		return readInput(new InputStreamReader(in),console);
 	}
 
-	public static String readInput(Reader in) throws IOException {
+	public String readInput(Reader in) throws IOException {
 		return readInput(in,null);
 	}
-	public static String readInput(Reader in,PrintStream console) throws IOException {
+	
+	public String readInput(Reader in,PrintStream outputConsole) throws IOException {
 		BufferedReader bufferedReader = new BufferedReader(in);
 		String line = null;
 		StringBuilder buf = new StringBuilder();
@@ -78,11 +99,30 @@ public class Repl {
 				buf.append(newLine);
 				multiLine=true;
 			}
-			if(multiLine)
-				console.print(">");
+			if(multiLine && outputConsole!=null)
+				outputConsole.print(">");
 		}
-		String input = buf.toString();
-		return input;
+		return buf.toString();
 	}
+	
+	/**
+	 * Reading input using JLine that is similar to GNU's readline lib 
+	 * @param console
+	 * @param outputConsole
+	 */
+	public String readJLineInput(ConsoleReader console,PrintStream outputConsole) throws IOException {
+		String line = null;
+		StringBuilder buf = new StringBuilder();
+		while ((line = console.readLine()) != null) {
+			buf.append(line);
+			if (line.trim().endsWith(";;")) {
+				break;
+			}else  {
+				buf.append(newLine);
+			}
+		}
+		return buf.toString();
+	}
+
 
 }
