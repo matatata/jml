@@ -45,6 +45,6 @@ will then return [1,2,3,4]. Note that nil is a synonym for the empty list [], [1
 
 The language's grammar is defined in [FL.g](src/main/antlr3/fl/frontend/parser/FL.g).
 
-See [test.fl](src/test/resources/test.fl) and [global.fl](src/main/resources/global.fl) to get a glipse of the supported syntax and functionality.
+See [test.fl](src/test/resources/test.fl) and [global.fl](src/main/resources/global.fl) to get a glimpse of the supported syntax and functionality.
 
 
